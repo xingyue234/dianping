@@ -1,0 +1,86 @@
+<div> 
+  <mu-raised-button label="列表" :primary="focus == 'list'"
+  @click="click('list')"/>
+  <mu-raised-button label="批量删除" secondary class="demo-raised-button" 
+  :disabled="isDisabled" @click="deleteGoods"/>
+  <mu-raised-button label="添加" :primary="focus == 'add'"
+  @click="click('add')"/>
+ <h2>商户名称： {{ shopName }} </h2>
+
+   <div v-if="focus == 'list'">
+     <mu-table multiSelectable enableSelectAll ref="table" @rowSelection="rowSelection" >
+      <mu-thead>
+        <mu-tr>
+          <mu-th>商品图片</mu-th>
+          <mu-th>名称</mu-th>
+          <mu-th>所属商家</mu-th>
+          <mu-th>操作</mu-th>
+        </mu-tr>
+      </mu-thead>
+      <mu-tbody>
+        <mu-tr  v-if="!goodsData.length" class="hiddeCheckbox">
+          <mu-td>
+            暂无商品
+          </mu-td>
+        </mu-tr>
+        <mu-tr v-for=" item,index in  goodsData" :key="item._id"  v-if="goodsData.length">
+          <mu-td>
+            <img :src="host+item.cover" alt="" class="goods-avatar">
+          </mu-td>
+          <mu-td>{{item.name}}</mu-td>
+          <mu-td>{{item.shop.name}}</mu-td>
+          <mu-th>
+            <mu-raised-button label="编辑"  secondary class="demo-raised-button" 
+            @click.stop="showeditGoods(item)" />
+          </mu-th>
+          <mu-th>
+            <mu-raised-button label="删除"  secondary class="demo-raised-button" 
+            @click.stop="deleteGoods(item._id)" />
+          </mu-th>
+        </mu-tr>
+      </mu-tbody>
+    </mu-table>
+   </div>
+
+   <div  v-if="focus == 'add'">
+      <form action="">
+          <h4>商品名称</h4>
+          <p>
+            <mu-text-field v-model="add.goodname" label="请输入商品名称" labelFloat />
+          </p>
+          <p>
+              <mu-raised-button @click="addGoods" label="提交"  secondary class="demo-raised-button" />
+          </p>
+        </form>
+   </div>
+
+   <mu-popup :position="popup.position" :overlay="popup.overlay" 
+    :popupClass="{'demo-popup-top':true,'error':popup.error}" :open="popup.open">
+    {{ popup.message}}
+    </mu-popup>
+
+    <mu-dialog :open=" dialog.open" :title="dialog.title" @close="close" >
+    <form action="">
+      <p>
+        <div class="uploadImg">
+            <img :src="uploadImg.fileUrl" alt="">
+        </div>
+        <a href="javascript:;" class="a-upload">
+            选择
+            <input type="file" @change="chooseImg" accept="image/png,image/jpeg" > 
+        </a> 
+        <a href="javascript:;" class="a-upload" @click="uploadCover">上传</a>
+        <span class="limitImg">图片宽高小于250px,最大不能超过5M</span>
+         <mu-linear-progress mode="determinate" :value="uploadImg.progress"/>
+      </p>
+
+      <p>
+        <mu-text-field v-model="editname" label="请输入要修改的商品名称" labelFloat />
+      </p>
+      <p>
+          <mu-raised-button label="提交"  secondary class="demo-raised-button" 
+          @click="editGoods"/>
+      </p>
+    </form>
+  </mu-dialog>
+</div>

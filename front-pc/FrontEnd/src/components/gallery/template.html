@@ -1,0 +1,54 @@
+<div>
+    <mu-raised-button label="相册列表" :primary="focus == 'list'"
+    @click="click('list')"/>
+    <mu-raised-button label="批量删除" secondary class="demo-raised-button" 
+    :disabled="isDisabled" @click="deleteAllGallery"/>
+    <mu-raised-button label="添加相册" backgroundColor="purple" @click=" showUpload" />
+    <h2>商家名称：{{shopName}}</h2>
+       <div v-if="focus == 'list'">
+         <p>
+           <input type="checkbox" class="check-btn-all" v-model="checkedAll" 
+           @click="changeAll" @change="changeCheck"/> <br/>
+         </p>
+          <mu-grid-list class="gridlist-demo" >
+            <mu-grid-tile v-for="item,index in galleryData" :key="index" >
+              <input type="checkbox" class="check-btn" v-model="item.checked" @change="changeCheck(index)" />
+                <img :src="host + item.path"/>
+              <span slot="title">{{item.description}}</span>
+              <span slot="subTitle" @click="deleteGallery(index)" style="cursor:pointer">删除</span>
+            </mu-grid-tile>
+        </mu-grid-list>
+       </div>
+       <div v-if="focus == 'add'">
+         add
+       </div>
+
+    <mu-popup :position="popup.position" :overlay="popup.overlay" 
+      :popupClass="{'demo-popup-top':true,'error':popup.error}" :open="popup.open">
+      {{ popup.message}}
+    </mu-popup>
+
+    <mu-dialog :open=" uploadImg.open" :title="uploadImg.title" @close="uploadImg.open = false">
+      <form action="">
+        <div class="uploadImg">
+            <img :src="uploadImg.fileUrl" alt="" v-if="uploadImg.fileUrl">
+        </div>
+        <div class="imgDescription">
+           <mu-text-field v-model="uploadImg.description" hintText="请输入图片简介" multiLine :rows="10" :rowsMax="10" />
+        </div>
+        <div>
+          <a href="javascript:;" class="a-upload">
+            选择
+            <input type="file" @change="chooseImg"> 
+          </a> 
+          <a href="javascript:;" class="a-upload" @click="uploadCover">上传</a> 
+        </div>
+        
+      </form>
+      <span class="limitImg">图片宽高小于250px,最大不能超过5M</span>
+      <mu-linear-progress mode="determinate" :value="uploadImg.progress"/>
+      <p>
+        <mu-raised-button label="确定" @click="uploadImg.open = false"  secondary class="demo-raised-button" />
+      </p>
+  </mu-dialog>
+</div>

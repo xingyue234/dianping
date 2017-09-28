@@ -1,0 +1,61 @@
+<div>
+      	<mu-raised-button label="列表" :primary="focus == 'list'"
+    		@click="click('list')"/>
+				<mu-raised-button label="批量删除" secondary class="demo-raised-button" 
+    		:disabled="isDisabled" @click="deleteShopType"/>
+        <mu-raised-button label="添加" :primary="focus == 'add'"
+        	@click="click('add')"/>
+        	
+        <div class="" v-if="focus == 'list'">
+        	<mu-table multiSelectable enableSelectAll @rowSelection="rowSelection" >
+        		<mu-thead  slot="header">
+        			<mu-tr>
+        				<mu-th tooltip="ID">ID</mu-th>
+        				<mu-th tooltip="名称">名称</mu-th>
+        				<mu-th tooltip="操作">操作</mu-th>
+        			</mu-tr>
+        		</mu-thead>
+        		<mu-tbody>
+        			 <mu-tr v-for="item,index in tableData"  :key="item._id" :selected="item.selected">
+				        <mu-td>{{index + 1}}</mu-td>
+				        <mu-td>{{item.name}}</mu-td>
+				        <mu-td>
+									<mu-raised-button @click.native.stop="deleteShopType(item._id)" label="删除"  secondary class="demo-raised-button" />
+								</mu-td>
+								<mu-td>
+									<mu-raised-button @click.native.stop="showEditShopType(item)" label="编辑"  secondary class="demo-raised-button" />
+								</mu-td>
+				     </mu-tr>
+        		</mu-tbody>
+        	</mu-table>
+        </div>
+        <div class="" v-if="focus == 'add'">
+        	<form action="">
+        		<h4>类别名称</h4>
+        		<p>
+        			<mu-text-field v-model="typename" label="请输入一个类别名称" labelFloat />
+        		</p>
+        		<p>
+        		  	<mu-raised-button @click="addShopType" label="提交"  secondary class="demo-raised-button" />
+        		</p>
+        	</form>
+        </div>
+				
+          <mu-popup :position="popup.position" :overlay="popup.overlay" 
+					:popupClass="{'demo-popup-top':true,'error':popup.error}" :open="popup.open">
+			    {{ popup.message}}
+		     </mu-popup>
+
+				 <mu-dialog :open=" dialog.open" :title="dialog.title" >
+					<form action="">
+        		<p>
+        			<mu-text-field v-model="editname" label="请输入要修改的类别名称" labelFloat />
+        		</p>
+        		<p>
+        		  	<mu-raised-button @click="editShopType" label="提交"  secondary class="demo-raised-button" />
+        		</p>
+        	</form>
+					<mu-flat-button slot="actions" @click="close" primary label="取消"/>
+					<mu-flat-button slot="actions" primary @click="close" label="确定"/>
+				</mu-dialog>
+    </div>

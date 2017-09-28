@@ -1,0 +1,128 @@
+  <div>
+      <mu-raised-button label="商家列表" :primary="focus == 'list'"
+      @click="click('list')"/>
+      <mu-raised-button label="批量删除" secondary class="demo-raised-button" 
+      :disabled="isDisabled" />
+      <mu-raised-button label="添加" :primary="focus == 'add'"
+        @click="click('add')"/>
+        <div v-if="focus == 'list'">
+          <mu-list v-for="item,index in shopData">
+            <mu-list-item :title="item.name">
+              <mu-avatar :src="host + item.cover" slot="leftAvatar"/>
+              <span slot="describe">
+                <span style="color: rgba(0, 0, 0, .87)">商家类型：{{item.type.name}} -</span> 
+               描述： {{ item.description }}
+              </span>
+              <mu-icon-menu slot="right" icon="..." tooltip="操作">
+                <mu-menu-item title="详情" />
+                <mu-menu-item @click="showEditShop(item)" title="编辑" />
+                <mu-menu-item  @click="deleteShop(item._id)" title="删除" />
+                <mu-menu-item title="上传封面图" @click="showUpload(item,'上传封面图')"/>
+                <mu-menu-item title="上传相册" @click="showUpload(item,'上传相册')"/>
+                
+              </mu-icon-menu>
+              <p>
+                 <span>电话：{{ item.phone }}</span>
+                 <span>地址：{{ item.address }}</span>
+              </p>
+               <p>
+                 <router-link :to="'/shop/goods/'+ item._id">
+                    <mu-raised-button label="查看商品"  class="demo-raised-button" backgroundColor="purple"/>
+                 </router-link>
+                 <router-link :to="'/shop/gallery/'+ item._id">
+                    <mu-raised-button label="查看相册"  class="demo-raised-button" backgroundColor="darkgreen"/>
+                 </router-link>
+                 
+              </p>
+            </mu-list-item>
+            
+            <mu-divider inset/>
+          </mu-list>
+        </div>
+        <div v-if="focus == 'add'">
+          <form action="">
+              <p>
+               <h4>商户名称（必填）</h4>
+                <mu-text-field v-model="addShopMsg.name"  label="商户名称（必填）" labelFloat  />
+              </p>
+              <p>
+               <h4>商户类型（必选）</h4>
+                <mu-select-field v-model="addShopMsg.typename" :labelFocusClass="['label-foucs']" label="请选择商户类型（必选）">
+                  <mu-menu-item v-for="item,index in typeData" :key="index" :value="item.name" :title="item.name" :_id="addTypeId"/>
+                </mu-select-field>
+                <br/>
+              </p>
+              <p>
+                <h4>商户电话</h4>
+                <mu-text-field v-model="addShopMsg.phone" label="商户电话" labelFloat />
+              </p>
+              <p>
+               <h4>商户地址</h4>
+                <mu-text-field v-model="addShopMsg.address" label="商户地址" labelFloat />
+              </p>
+              <p>
+                    <h4>商家简介</h4>
+                    <mu-text-field v-model="addShopMsg.description" hintText="请输入商家简介" multiLine :rows="10" :rowsMax="10" fullWidth />
+                </p>
+              <p>
+                  <mu-raised-button label="提交" @click="addShop" secondary class="demo-raised-button" />
+              </p>
+          </form>
+        </div>
+
+         <mu-popup :position="popup.position" :overlay="popup.overlay" 
+					:popupClass="{'demo-popup-top':true,'error':popup.error}" :open="popup.open">
+			    {{ popup.message}}
+		     </mu-popup>
+
+         <mu-dialog :open=" dialog.open" :title="dialog.title" @close="close">
+					<form action="">
+              <p>
+                <mu-text-field v-model="editShopMsg.name"  label="商户名称" labelFloat  />
+              </p>
+              <p>
+                <mu-select-field v-model="editShopMsg.typeId" :labelFocusClass="['label-foucs']" label="请选择商户类型" >
+                  <mu-menu-item v-for="item,index in typeData" :key="index" :value="item._id" :title="item.name" />
+                  <!--这里value和title是一一对应关系-->
+                </mu-select-field>
+                <br/>
+              </p>
+              <p>
+                <mu-text-field v-model="editShopMsg.phone" label="商户电话" labelFloat />
+              </p>
+              <p>
+                <mu-text-field v-model="editShopMsg.address" label="商户地址" labelFloat />
+              </p>
+              <p>
+                <mu-text-field v-model="editShopMsg.description" label="商户简介" labelFloat multiLine :rows="3" />
+              </p>
+              <p>
+                  <mu-raised-button label="提交" @click="editShop" secondary class="demo-raised-button" />
+              </p>
+          </form>
+				</mu-dialog>
+
+        <mu-dialog :open=" uploadImg.open" :title="uploadImg.title" @close="uploadImg.open = false">
+            <form action="">
+              <div class="uploadImg">
+                  <img :src="uploadImg.fileUrl" alt="" v-if="uploadImg.fileUrl">
+              </div>
+              <div class="imgDescription" v-if="uploadImg.title == '上传相册'">
+                   <mu-text-field v-model="uploadImg.description" hintText="请输入图片简介" multiLine :rows="10" :rowsMax="10" />
+              </div>
+              <div>
+                <a href="javascript:;" class="a-upload">
+                  选择
+                  <input type="file" @change="chooseImg"> 
+               </a> 
+               <a href="javascript:;" class="a-upload" @click="uploadCover">上传</a> 
+              </div>
+              
+            </form>
+            <span class="limitImg">图片宽高小于250px,最大不能超过5M</span>
+            <mu-linear-progress mode="determinate" :value="uploadImg.progress"/>
+            <p>
+              <mu-raised-button label="确定" @click="uploadImg.open = false"  secondary class="demo-raised-button" />
+            </p>
+        </mu-dialog>
+  </div>

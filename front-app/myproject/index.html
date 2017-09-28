@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>myproject</title>
+    <script type="text/javascript">
+      setSize();
+     window.onresize = setSize;
+     function setSize(){
+        var meta = document.createElement("meta");
+        meta.name = "viewport";
+        var scale = 1;
+        scale = 1/window.devicePixelRatio;
+        meta.content = "user-scalable=no,minimum-scale="+ scale +",initial-scale="+scale+",maximum-scale="+scale;
+        document.head.appendChild(meta);
+
+        var html = document.documentElement;
+        var width = html.clientWidth/16;
+        /*1rem=40px*/
+        html.style.fontSize = width + "px";
+      }
+    </script>
+  </head>
+  <body>
+    <div id="app"></div>
+    <!-- built files will be auto injected -->
+  </body>
+
+  <script>
+
+  </script>
+</html>
