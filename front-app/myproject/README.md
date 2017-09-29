@@ -40,3 +40,6 @@ For detailed explanation on how things work, checkout the [guide](http://vuejs-t
   3. 生日
   4. 收获地址（三级联动）
   5. 退出当前账户
+
+####  效果预览图
+![Mou icon](app02.gif)
