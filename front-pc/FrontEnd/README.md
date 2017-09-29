@@ -43,3 +43,6 @@ npm run build --report
   * 浏览
   * 删除
 
+####  效果预览图
+![Mou icon](pc02.gif)
+

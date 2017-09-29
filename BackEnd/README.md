@@ -1,3 +1,8 @@
+## 安装步骤
+* 进入BackEnd 安装依赖 npm install
+* node Server.js 开启服务
+
+
 # API
 
 ## 前台
